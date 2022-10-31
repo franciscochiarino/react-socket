@@ -5,25 +5,24 @@ import { useEffect, useState } from 'react';
 const socket = io.connect('http://localhost:3001');
 
 function App() {
-  const [message, setMessage] = useState('');
-  const [messageReceived, setMessageReceived] = useState('');
-
-  const sendMessage = () => {
-    socket.emit('send_message', { message })
-  }
+  const [deck, setDeck] = useState([]);
+  const [instruction, setInstruction] = useState('');
 
   useEffect(() => {
-    socket.on('receive_message', (data) => {
-      setMessageReceived(data.message);
+    socket.on('receive_initial_deck', (deck) => {
+      setInstruction('Go ahead');
+      setDeck(deck);
     })
+
+    if (!deck.length) {
+      setInstruction('Wait for your turn');
+    }
   }, [socket]);
 
   return (
     <div className="App">
-      <h3>Message:</h3>
-      <p>{messageReceived}</p>
-      <input placeholder="Message..." onChange={(e) => setMessage(e.target.value)}/>
-      <button onClick={sendMessage}>Send Message</button>
+      <h4>{instruction}</h4>
+      <h3>{deck}</h3>
     </div>
   );
 }
