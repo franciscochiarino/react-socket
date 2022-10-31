@@ -15,6 +15,13 @@ function App() {
     setTurn(false);
   }
 
+  const shuffleDeck = () => {
+    deck.sort(() => 0.5 - Math.random());
+
+    socket.emit('send_deck', deck);
+    setTurn(false);
+  }
+
   useEffect(() => {
     socket.on('receive_initial_deck', (deck) => {
       setDeck(deck);
@@ -37,6 +44,7 @@ function App() {
       {console.log(turn)}
       <h3>{turn && deck}</h3>
       <button onClick={drawCard} disabled={!turn}>Draw card</button>
+      <button onClick={shuffleDeck} disabled={!turn}>Shuffle</button>
     </div>
   );
 }
