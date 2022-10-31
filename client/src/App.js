@@ -5,24 +5,38 @@ import { useEffect, useState } from 'react';
 const socket = io.connect('http://localhost:3001');
 
 function App() {
+  const [turn, setTurn] = useState(true);
   const [deck, setDeck] = useState([]);
-  const [instruction, setInstruction] = useState('');
+
+  const drawCard = () => {
+    deck.pop();
+
+    socket.emit('send_deck', deck);
+    setTurn(false);
+  }
 
   useEffect(() => {
     socket.on('receive_initial_deck', (deck) => {
-      setInstruction('Go ahead');
       setDeck(deck);
+      setTurn(true);
+    })
+
+    socket.on('receive_deck', deck => {
+      setDeck(deck);
+      setTurn(true);
     })
 
     if (!deck.length) {
-      setInstruction('Wait for your turn');
+      setTurn(false)
     }
   }, [socket]);
 
   return (
     <div className="App">
-      <h4>{instruction}</h4>
-      <h3>{deck}</h3>
+      <h4>{turn ? 'Go ahead' : 'Wait for your turn'}</h4>
+      {console.log(turn)}
+      <h3>{turn && deck}</h3>
+      <button onClick={drawCard} disabled={!turn}>Draw card</button>
     </div>
   );
 }

@@ -16,7 +16,11 @@ const io = new Server(server, {
 });
 
 io.on('connection', (socket) => {
-  socket.broadcast.emit('receive_initial_deck', [...Array(10).keys()])
+  socket.broadcast.emit('receive_initial_deck', [...Array(10).keys()]);
+
+  socket.on('send_deck', deck => {
+    socket.broadcast.emit('receive_deck', deck);
+  })
 })
 
 server.listen(3001, () => {
