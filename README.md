@@ -9,7 +9,7 @@ Further along I would like to use Firebase to setup a quick database, but that's
 Clone this repository:
 
 ```
-git clone repo_link
+git clone git@github.com:franciscochiarino/react-socket.git
 ```
 
 Inside this project there are two directories: client and server. On both of them you have to run:
