@@ -1,6 +1,4 @@
 import './App.css';
-import io from 'socket.io-client';
-import { useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -10,8 +8,6 @@ import Home from './Home';
 import Room from './Room';
 
 function App() {
-  const [socket, setSocket] = useState(null);
-
   // const [turn, setTurn] = useState(true);
   // const [deck, setDeck] = useState([]);
 
@@ -44,16 +40,6 @@ function App() {
   //     setTurn(false)
   //   }
   // }, [socket]);
-
-  useEffect(() => {
-    const newSocket = io('http://localhost:3001');
-    newSocket.on('connect', (socket) => {
-      console.log('socket connected', socket);
-    })
-    
-    setSocket(newSocket);
-    return () => newSocket.close();
-  }, [setSocket]);
 
   return (
     <div className="App">
