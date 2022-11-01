@@ -16,6 +16,7 @@ const io = new Server(server, {
 });
 
 io.on('connection', (socket) => {
+  console.log(`User connected in ${socket.id}`)
   socket.broadcast.emit('receive_initial_deck', [...Array(10).keys()]);
 
   socket.on('send_deck', deck => {

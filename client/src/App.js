@@ -1,50 +1,74 @@
 import './App.css';
 import io from 'socket.io-client';
 import { useEffect, useState } from 'react';
-
-const socket = io.connect('http://localhost:3001');
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from "react-router-dom";
+import Home from './Home';
+import Room from './Room';
 
 function App() {
-  const [turn, setTurn] = useState(true);
-  const [deck, setDeck] = useState([]);
+  const [socket, setSocket] = useState(null);
 
-  const drawCard = () => {
-    deck.pop();
+  // const [turn, setTurn] = useState(true);
+  // const [deck, setDeck] = useState([]);
 
-    socket.emit('send_deck', deck);
-    setTurn(false);
-  }
+  // const drawCard = () => {
+  //   deck.pop();
 
-  const shuffleDeck = () => {
-    deck.sort(() => 0.5 - Math.random());
+  //   socket.emit('send_deck', deck);
+  //   setTurn(false);
+  // }
 
-    socket.emit('send_deck', deck);
-    setTurn(false);
-  }
+  // const shuffleDeck = () => {
+  //   deck.sort(() => 0.5 - Math.random());
+
+  //   socket.emit('send_deck', deck);
+  //   setTurn(false);
+  // }
+
+  // useEffect(() => {
+  //   socket.on('receive_initial_deck', (deck) => {
+  //     setDeck(deck);
+  //     setTurn(true);
+  //   })
+
+  //   socket.on('receive_deck', deck => {
+  //     setDeck(deck);
+  //     setTurn(true);
+  //   })
+
+  //   if (!deck.length) {
+  //     setTurn(false)
+  //   }
+  // }, [socket]);
 
   useEffect(() => {
-    socket.on('receive_initial_deck', (deck) => {
-      setDeck(deck);
-      setTurn(true);
+    const newSocket = io('http://localhost:3001');
+    newSocket.on('connect', (socket) => {
+      console.log('socket connected', socket);
     })
-
-    socket.on('receive_deck', deck => {
-      setDeck(deck);
-      setTurn(true);
-    })
-
-    if (!deck.length) {
-      setTurn(false)
-    }
-  }, [socket]);
+    
+    setSocket(newSocket);
+    return () => newSocket.close();
+  }, [setSocket]);
 
   return (
     <div className="App">
-      <h4>{turn ? 'Go ahead' : 'Wait for your turn'}</h4>
+      <Router>
+        <Routes>
+          <Route path="/room" element={<Room />} />
+          <Route path="/" element={<Home/>} />
+        </Routes>
+      </Router>
+
+      {/* <h4>{turn ? 'Go ahead' : 'Wait for your turn'}</h4>
       {console.log(turn)}
       <h3>{turn && deck}</h3>
       <button onClick={drawCard} disabled={!turn}>Draw card</button>
-      <button onClick={shuffleDeck} disabled={!turn}>Shuffle</button>
+      <button onClick={shuffleDeck} disabled={!turn}>Shuffle</button> */}
     </div>
   );
 }
