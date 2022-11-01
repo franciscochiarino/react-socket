@@ -20,3 +20,10 @@ npm start
 ```
 
 Replace `npm` for `yarn` if you're using yarn.
+
+## Changelog
+
+**31.10.2022**
+
+- [BUGFIX] Connection: Prevent multiple connection from the same computer
+- [FEATURE] Room: Create Room component and route to make things easier in the future
